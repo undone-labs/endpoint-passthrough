@@ -1,0 +1,6 @@
+name = "endpoint-passthrough"
+type = "webpack"
+account_id = "account-id-here"
+workers_dev = true
+route = ""
+zone_id = ""
