@@ -1,0 +1,27 @@
+{
+    "name": "endpoint-passthrough",
+    "version": "0.1.0",
+    "description": "A Cloudflare worker to act as a proxy for API calls",
+    "main": "worker.js",
+    "scripts": {
+      "build": "rollup -c",
+      "start": "wrangler dev",
+      "ship": "wrangler publish"
+    },
+    "keywords": [
+      "proxy",
+      "api",
+      "cloudflare",
+      "worker"
+    ],
+    "author": "Orun Bhuiyan",
+    "license": "APL-2.0",
+    "devDependencies": {
+      "@cloudflare/wrangler": "^1.19.4",
+      "rollup": "^2.60.2",
+      "rollup-plugin-node-resolve": "^5.2.0",
+      "rollup-plugin-terser": "^7.0.2"
+    },
+    "dependencies": {}
+  }
+  
