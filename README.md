@@ -9,7 +9,8 @@ The objective of this project is to provide a small and lightweight package that
 - Create a Cloudflare Workers account
 - Create and include a key and add it to the `wrangler.toml` config file in the `account_id` variable
 - Set up your environment variables for the secret keys needed for your APIs. This can be done in the Cloudflare dashboard under the Workers tab.
-- Add some custom endpoints in `config.js`
+- Add some custom endpoints in `config.js` under `endpoints`
+- Optionally, add allow-listed domains in `config.js` under `allowedHostnames`
 - Build with `npm run build`
 - Start locally with `npm run start`
 - Deploy to a worker instance with `npm run ship`
@@ -18,5 +19,6 @@ The objective of this project is to provide a small and lightweight package that
 
 - API pass through for any number of endpoints
 - `GET` and `POST` compatibility
+- Domain-based allow-list to filter requests
 - Param preservation, parameters are not stripped and are passed to the target endpoint request
 - Caching, a 30 second cache is included by default and uses Cloudflare's native cache API
