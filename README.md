@@ -8,6 +8,7 @@ The objective of this project is to provide a small and lightweight package that
 
 - Create a Cloudflare Workers account
 - Create and include a key and add it to the `wrangler.toml` config file in the `account_id` variable
+- Set up your environment variables for the secret keys needed for your APIs. This can be done in the Cloudflare dashboard under the Workers tab.
 - Add some custom endpoints in `config.js`
 - Build with `npm run build`
 - Start locally with `npm run start`
