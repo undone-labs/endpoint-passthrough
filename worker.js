@@ -7,8 +7,9 @@ addEventListener('fetch', event => {
 
 async function handleRequest(request, allowedHostnames) {
   try {
-    const url = new URL(request.url);
-    const apiURL = url.searchParams.get('api');
+    let originalUrl = new URL(request.url);
+    let apiUrl = originalUrl.searchParams.get('api');
+    originalUrl.searchParams.delete('api');
 
     // Handle hostname checking
     const hostnameCheckResponse = handleHostname(request, allowedHostnames);
@@ -16,7 +17,7 @@ async function handleRequest(request, allowedHostnames) {
       return hostnameCheckResponse;
     }
 
-    const endpoint = endpoints.find(e => e.url === apiURL);
+    const endpoint = endpoints.find(e => e.url === apiUrl);
 
     if (!endpoint) {
       throw new Error('Invalid API URL');
@@ -26,7 +27,11 @@ async function handleRequest(request, allowedHostnames) {
     let response = await cache.match(request);
 
     if (!response) {
-      let req = new Request(apiURL, request);
+      let req = new Request(apiUrl + originalUrl.search, {
+        method: request.method,
+        headers: request.headers,
+        body: request.body,
+      });
       req.headers.set('Authorization', `Bearer ${process.env[endpoint.key]}`);
 
       response = await fetch(req);
