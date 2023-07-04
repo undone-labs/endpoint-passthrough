@@ -26,14 +26,15 @@ async function handleRequest(request, allowedHostnames) {
     const cache = caches.default;
     let response = await cache.match(request);
 
-    if (!response) {
-      let req = new Request(apiUrl + originalUrl.search, {
-        method: request.method,
-        headers: request.headers,
-        body: request.body,
-      });
-      req.headers.set('Authorization', `Bearer ${process.env[endpoint.key]}`);
+    // Create the proxied request
+    let req = new Request(apiUrl + originalUrl.search, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+    req.headers.set('Authorization', `Bearer ${process.env[endpoint.key]}`);
 
+    if (request.method === 'GET' && !response) {
       response = await fetch(req);
 
       if (!response.ok) {
@@ -43,6 +44,12 @@ async function handleRequest(request, allowedHostnames) {
       let responseClone = response.clone();
       responseClone.headers.append('Cache-Control', `public, max-age=${cacheDurationSeconds}`);
       event.waitUntil(cache.put(request, responseClone));
+    } else {
+      response = await fetch(req);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch from API: ${response.statusText}`);
+      }
     }
 
     return response;
