@@ -1,6 +1,6 @@
 {
     "name": "endpoint-passthrough",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "A Cloudflare worker to act as a proxy for API calls",
     "main": "worker.js",
     "scripts": {
