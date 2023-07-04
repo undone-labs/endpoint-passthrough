@@ -10,10 +10,11 @@ export const endpoints = [
   // Add more endpoint objects as needed
 ];
 
-export const allowedHostnames = [
+export const allowList = [
   'app.baz.com',
-  'qux.com'
-  // Add more allow-listed hostnames as needed
-]
+  'qux.com',
+  '192.168.2.1',
+  // Add more allow-listed hostnames or IPs as needed
+];
 
 export const cacheDurationSeconds = 30

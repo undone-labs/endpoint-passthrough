@@ -1,20 +1,20 @@
-import { endpoints, cacheDurationSeconds, allowedHostnames } from './config.js'
-import { handleHostname } from './handler.js';
+import { allowList, endpoints, cacheDurationSeconds } from './config.js';
+import { handleSource } from './handler.js';
 
 addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request, allowedHostnames))
+  event.respondWith(handleRequest(event.request, allowList))
 })
 
-async function handleRequest(request, allowedHostnames) {
+async function handleRequest(request, allowList) {
   try {
-    let originalUrl = new URL(request.url);
-    let apiUrl = originalUrl.searchParams.get('api');
-    originalUrl.searchParams.delete('api');
+    const url = new URL(request.url);
+    const apiUrl = url.searchParams.get('api');
+    
 
-    // Handle hostname checking
-    const hostnameCheckResponse = handleHostname(request, allowedHostnames);
-    if (hostnameCheckResponse) {
-      return hostnameCheckResponse;
+    // Handle hostname or IP checking
+    const sourceAllowed = handleSource(request, allowList);
+    if (sourceAllowed) {
+      return sourceAllowed;
     }
 
     const endpoint = endpoints.find(e => e.url === apiUrl);
@@ -26,8 +26,11 @@ async function handleRequest(request, allowedHostnames) {
     const cache = caches.default;
     let response = await cache.match(request);
 
-    // Create the proxied request
-    let req = new Request(apiUrl + originalUrl.search, {
+    // Delete the api param so it is omitted from the final request
+    url.searchParams.delete('api');
+
+    // Create a proxied request
+    let req = new Request(apiUrl + url.search, {
       method: request.method,
       headers: request.headers,
       body: request.body,
