@@ -43,7 +43,11 @@ async function handleRequest(request, allowedHostnames) {
 
       let responseClone = response.clone();
       responseClone.headers.append('Cache-Control', `public, max-age=${cacheDurationSeconds}`);
-      event.waitUntil(cache.put(request, responseClone));
+
+      // Cache the response without waiting for it to complete
+      cache.put(request, responseClone).catch(e => {
+        console.error('Failed to cache response:', e);
+      });
     } else {
       response = await fetch(req);
 
